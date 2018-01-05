@@ -1,0 +1,20 @@
+<div class="task-lists">
+  <app-task-list class="list-container" *ngFor="let list of lists" style="box-shadow: 1px 1px 3px #000; margin-right: 15px">
+    <app-task-header 
+      [header]="list.name" 
+      (newTask)="launchNewTaskDialog()"
+      (moveAll)="launchCopyTaskDialog()"
+      (delList)="launchConfirmDialog()"
+      (onEditList)="launchEditListDialog()">
+    </app-task-header>
+    <app-task-item 
+      *ngFor="let task of list.tasks" 
+      [item]="task"
+      (taskClick)="launchUpdateTaskDialog(task)">
+    </app-task-item>
+  </app-task-list>
+</div>
+
+<button class="fab-button" md-fab type="button" (click)="launchNewListDialog()">
+  <md-icon>add</md-icon>
+</button>
