@@ -1,4 +1,6 @@
+<!-- @item是动画函数anim中的itemAnim的trigger('item')指向 -->
 <md-list-item class="container"
+  [@item]="widerPriority"   
   [ngClass]="{
     'priority-normal': item.priority === 3,
     'priority-important': item.priority === 2,

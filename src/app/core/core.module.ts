@@ -8,6 +8,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { SharedModule } from '../shared/shared.module';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { AppRoutingModule } from '../app-routing.module';
 
 import 'hammerjs';
 
@@ -15,7 +16,8 @@ import 'hammerjs';
   imports: [
     HttpModule,
     SharedModule,
-    BrowserAnimationsModule 
+    AppRoutingModule,
+    BrowserAnimationsModule,
   ],
   declarations: [
     HeaderComponent,
@@ -26,6 +28,8 @@ import 'hammerjs';
     HeaderComponent,
     FooterComponent,
     SidebarComponent,
+    AppRoutingModule,
+    BrowserAnimationsModule,
   ]
 })
 export class CoreModule {

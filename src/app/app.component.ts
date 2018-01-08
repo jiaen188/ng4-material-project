@@ -7,7 +7,7 @@ import { OverlayContainer } from '@angular/material';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  
+
   darkTheme = false;
 
   constructor(private oc: OverlayContainer) {
@@ -16,7 +16,7 @@ export class AppComponent {
 
   switchDarkTheme(dark) {
     this.darkTheme = dark;
-    this.oc.themeClass = dark ? 'myapp-dark-theme' : null; 
+    this.oc.themeClass = dark ? 'myapp-dark-theme' : null;
   }
 
 }

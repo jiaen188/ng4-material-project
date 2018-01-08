@@ -20,6 +20,10 @@ md-sidenav-container,
 
 main {
   flex: 1;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: center;
+  // align-items: center;
 }
 
 .full-width {
@@ -31,3 +35,4 @@ main {
   // @angular/material 中很多控件使用了 flex 布局
   flex: 1 1 auto;
 }
+
