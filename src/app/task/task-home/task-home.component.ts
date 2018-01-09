@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MdDialog } from '@angular/material';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { CopyTaskComponent } from '../copy-task/copy-task.component';
@@ -13,7 +13,8 @@ import { slideToRight } from "../../anims/router.anim"
   styleUrls: ['./task-home.component.scss'],
   animations: [
     slideToRight
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskHomeComponent implements OnInit {
 
@@ -84,7 +85,7 @@ export class TaskHomeComponent implements OnInit {
     }
   ];
 
-  constructor(private dialog: MdDialog) { }
+  constructor(private dialog: MdDialog, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
   }

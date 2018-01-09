@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-task-header',
   templateUrl: './task-header.component.html',
-  styleUrls: ['./task-header.component.scss']
+  styleUrls: ['./task-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskHeaderComponent implements OnInit {
 

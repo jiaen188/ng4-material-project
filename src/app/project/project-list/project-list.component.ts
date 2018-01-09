@@ -6,6 +6,7 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { HostBinding } from '@angular/core';
 import { slideToRight } from '../../anims/router.anim';
 import { listAnimation } from '../../anims/list.anim';
+import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-project-list',
@@ -14,7 +15,13 @@ import { listAnimation } from '../../anims/list.anim';
   animations: [
     slideToRight,
     listAnimation
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.Default 
+  // 默认是全局检查，然后设置onpush模式，相当于说告诉angular我这个list组件没有变换，不用检查我
+  // 这个时候，点击增加按钮，没有新增，但是鼠标滑过list的时候，新增了。是因为item组件仍然是default模式
+  // 当item上的mouseenter，mouseleave事件触发，就会触发检查机制，然后list也会检查到
+  // 所以我们要在list的组件中新增，删除时告诉angular我这边是需要检查的，其他时候是onpush模式
 })
 export class ProjectListComponent implements OnInit {
 
@@ -35,7 +42,7 @@ export class ProjectListComponent implements OnInit {
     },
   ];
 
-  constructor(private dialog: MdDialog) { }
+  constructor(private dialog: MdDialog, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
@@ -45,6 +52,7 @@ export class ProjectListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(result)
       this.projects = [...this.projects, {id: 3, name: '一个新项目', desc: '这是一个新项目', coverImg: 'assets/img/covers/3.jpg'}]
+      this.cd.markForCheck(); // 告诉angular在onpush模式下，这边依然需要检查
     });
   }
 
@@ -62,6 +70,7 @@ export class ProjectListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
       this.projects = this.projects.filter(p => p.id !== project.id);
+      this.cd.markForCheck();      
     });
   }
 

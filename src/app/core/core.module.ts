@@ -30,6 +30,9 @@ import 'hammerjs';
     SidebarComponent,
     AppRoutingModule,
     BrowserAnimationsModule,
+  ],
+  providers: [
+    {provide: 'BASE_CONFIG', useValue: 'http://localhost:3000'}
   ]
 })
 export class CoreModule {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { itemAnim } from '../../anims/item.anim'
 
@@ -8,7 +8,8 @@ import { itemAnim } from '../../anims/item.anim'
   styleUrls: ['./task-item.component.scss'],
   animations: [
     itemAnim
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskItemComponent implements OnInit {
 
