@@ -1,4 +1,5 @@
 <!-- @item是动画函数anim中的itemAnim的trigger('item')指向 -->
+<!-- app-draggable是拖拽指令，draggedClass是拖拽时候需要的传入的样式,注意 引号 里面 的单引号-->
 <md-list-item class="container"
   [@item]="widerPriority"   
   [ngClass]="{
@@ -6,19 +7,27 @@
     'priority-important': item.priority === 2,
     'priority-emergency': item.priority === 1
   }"
+  [app-draggable]="true"
+  [dragTag]="'task-item'"
+  [draggedClass]="'drag-start'"
+  [dragData]="item"
   (click)="onItemClick()">
   <md-checkbox 
     class="completion-status" 
     [checked]="item.completed"
     (click)="onCheckboxClick($event)"
   ></md-checkbox>
-  <div md-line class="content" [ngClass]="{'completed': item.completed}">
+  <div md-line class="content" [class.completed]="item.completed">
     <span [md-tooltip]="item.desc">{{item.desc}}</span>
   </div>
   <div md-line class="bottom-bar">
     <span class="due-date" *ngIf="item.dueDate">
       {{item.dueDate | date: "yy-MM-dd" }}
     </span>
+    <!-- <ng-template [ngIf]="item.reminder">
+      <md-icon>alarm</md-icon>      
+    </ng-template> -->
+    <!-- 下面的是语法糖，相当于上面的写法 -->
     <md-icon *ngIf="item.reminder">alarm</md-icon>
   </div>
   <md-icon [svgIcon]="avatar" md-list-avatar class="avatar"></md-icon>

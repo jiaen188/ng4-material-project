@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { 
   MdToolbarModule,
    MdIconModule, 
@@ -21,10 +22,13 @@ import {
    MdSidenavModule,
   } from '@angular/material';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { DirectiveModule } from '../directive/directive.module';
 
 @NgModule({
   imports: [
     CommonModule, // 分享模块，只要导入这个就行
+    FormsModule,
+    ReactiveFormsModule,
     MdToolbarModule,
     MdIconModule,// 用material的自带的图标库需要引入这个模块
     MdButtonModule,
@@ -43,9 +47,12 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MdRadioModule,
     MdSelectModule,
     MdSidenavModule,
+    DirectiveModule,
   ],
   exports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MdToolbarModule,
     MdIconModule,
     MdButtonModule,
@@ -64,6 +71,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MdRadioModule,
     MdSelectModule,
     MdSidenavModule,
+    DirectiveModule,
   ],
   declarations: [ConfirmDialogComponent],
   entryComponents: [

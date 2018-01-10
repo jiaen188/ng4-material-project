@@ -9,14 +9,17 @@ import { HttpModule } from '@angular/http';
 import { SharedModule } from '../shared/shared.module';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '../app-routing.module';
+import 'rxjs/add/operator/take';
 
 import 'hammerjs';
+import { ServicesModule } from '../services/services.module';
 
 @NgModule({
   imports: [
     HttpModule,
     SharedModule,
     AppRoutingModule,
+    ServicesModule.forRoot(), // 不写元数据，通过静态方法提供module
     BrowserAnimationsModule,
   ],
   declarations: [
