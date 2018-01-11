@@ -7,7 +7,7 @@ import { MdIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { SharedModule } from '../shared/shared.module';
-import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '../app-routing.module';
 import 'rxjs/add/operator/take';
 
@@ -35,7 +35,11 @@ import { ServicesModule } from '../services/services.module';
     BrowserAnimationsModule,
   ],
   providers: [
-    {provide: 'BASE_CONFIG', useValue: 'http://localhost:3000'}
+    {
+      provide: 'BASE_CONFIG', useValue: {
+        uri: 'http://localhost:3000' // 请求mock数据的地址，用json-server ./mock/data.json启动服务
+      }
+    }
   ]
 })
 export class CoreModule {

@@ -1,5 +1,7 @@
 import { Component, OnInit, group } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
+import { QuoteService } from '../../services/quote.service';
+import { Quote } from '../../domain/quote.mode';
 
 @Component({
   selector: 'app-login',
@@ -9,8 +11,18 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 export class LoginComponent implements OnInit {
 
   form: FormGroup;
+  quote: Quote = {
+    cn: '满足感在于不断的努力，而不是现有成就感。全心全意努力定会胜利满满',
+    en: 'Satisfaction lies in the effort , not in the attainment. Full effort is full victory',
+    pic: '/assets/img/quote_fallback.jpg'
+  };
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private quoteService$: QuoteService) { 
+    // 获取每日一句的数据
+    this.quoteService$
+      .getQuote()
+      .subscribe(q => this.quote = q);
+  }
 
   ngOnInit() {
     /**this.form = new FormGroup({
