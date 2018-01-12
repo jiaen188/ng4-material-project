@@ -25,8 +25,17 @@ export class RegisterComponent implements OnInit {
       name: [],
       password: [],
       repeat: [],
-      avatar: [img]
+      avatar: [img],
+      dateOfBirth: ['1995-01-01']
     })
+  }
+
+  onSubmit({value, valid}, ev: Event) {
+    ev.preventDefault(); // 防止表单提交的默认行为
+    if (!valid) { // 表单验证不通过不处理
+      return;
+    }
+    console.log(value);
   }
 
 }

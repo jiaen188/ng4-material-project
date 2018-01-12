@@ -20,10 +20,13 @@ import {
    MdNativeDateModule,
    MdSelectModule,
    MdSidenavModule,
+   MdButtonToggleModule,
+   MdChipsModule,
   } from '@angular/material';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { DirectiveModule } from '../directive/directive.module';
 import { ImageListSelectComponent } from './image-list-select/image-list-select.component';
+import { AgeInputComponent } from './age-input/age-input.component';
 
 @NgModule({
   imports: [
@@ -45,9 +48,11 @@ import { ImageListSelectComponent } from './image-list-select/image-list-select.
     MdTooltipModule,
     MdDatepickerModule,
     MdNativeDateModule,
+    MdButtonToggleModule,
     MdRadioModule,
     MdSelectModule,
     MdSidenavModule,
+    MdChipsModule,
     DirectiveModule,
   ],
   exports: [
@@ -69,15 +74,19 @@ import { ImageListSelectComponent } from './image-list-select/image-list-select.
     MdTooltipModule,
     MdDatepickerModule,
     MdNativeDateModule,
+    MdButtonToggleModule,
     MdRadioModule,
     MdSelectModule,
     MdSidenavModule,
+    MdChipsModule,
     DirectiveModule,
-    ImageListSelectComponent
+    ImageListSelectComponent,
+    AgeInputComponent,
   ],
   declarations: [
     ConfirmDialogComponent, 
-    ImageListSelectComponent
+    ImageListSelectComponent, 
+    AgeInputComponent
   ],
   entryComponents: [
     ConfirmDialogComponent
