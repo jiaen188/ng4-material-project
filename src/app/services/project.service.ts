@@ -35,7 +35,7 @@ export class ProjectService {
 
    // DELETE 要删除一个project，要删除所有的task-list，删除所有的任务task
    del(project: Project): Observable<Project> {  // 一般来说，一个project下，task-list不会很多，一个task-list下的task可能很多，所以删除task-list效率更高些
-    const delTasks$ = Observable.from(project.taskLists)
+    const delTasks$ = Observable.from(project.taskLists ? project.taskLists : []) // 新建的project，还没有taskLists
       .mergeMap(listId => this.http.delete(`${this.config.uri}/taskLists/${listId}`)) // 如果有新的task-list进来，原有的delete还是要做的，新的也做
       .count(); // 只会产生流里面的数量，一个值
 

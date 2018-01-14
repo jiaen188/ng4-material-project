@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MdDialog } from '@angular/material';
 import { NewProjectComponent } from '../new-project/new-project.component';
 import { InviteComponent } from '../invite/invite.component';
@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import * as _ from 'lodash';
 import { Project } from '../../domain';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-project-list',
@@ -26,19 +27,25 @@ import { Project } from '../../domain';
   // 当item上的mouseenter，mouseleave事件触发，就会触发检查机制，然后list也会检查到
   // 所以我们要在list的组件中新增，删除时告诉angular我这边是需要检查的，其他时候是onpush模式
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent implements OnInit, OnDestroy {
 
   @HostBinding('@routeAnim') state;
 
   projects;
-
+  sub: Subscription;
   constructor(private dialog: MdDialog, private cd: ChangeDetectorRef, private service$: ProjectService) { }
 
   ngOnInit() {
-    this.service$.get('1').subscribe(projects => {
+    this.sub = this.service$.get('1').subscribe(projects => {
       this.projects = projects;
       this.cd.markForCheck(); // 告诉angular在onpush模式下，这边依然需要脏值检测
     });
+  }
+
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   openNewProjectDialog() {
@@ -91,11 +98,14 @@ export class ProjectListComponent implements OnInit {
 
   launchConfirmDialog(project) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {data: {title: '删除项目：', content: '您确认删除项目么？'}});
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      this.projects = this.projects.filter(p => p.id !== project.id);
-      this.cd.markForCheck();      
-    });
+    dialogRef.afterClosed()
+      .take(1)
+      .filter(n => n)
+      .switchMap(_ => this.service$.del(project)) // 我们不关心dialog返回的值， 我们关注在删除函数 ，返回的project
+      .subscribe(prj => {
+        this.projects = this.projects.filter(p => p.id !== prj.id);
+        this.cd.markForCheck();      
+      });
   }
 
   // 获取封面
@@ -103,7 +113,6 @@ export class ProjectListComponent implements OnInit {
     return _.range(0, 40)
       .map(i => `/assets/img/covers/${i}_tn.jpg`);
   }
-
 
   // 处理封面的链接，如果是缩略图  要换成 大图
   private buildImgSrc(img: string): string {
