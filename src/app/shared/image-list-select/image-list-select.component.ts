@@ -25,7 +25,7 @@ export class ImageListSelectComponent implements ControlValueAccessor {
   @Input() rowHeight = '64px';
   @Input() items: string[] = [];
   @Input() useSvgIcon = false;
-  @Input() itemWith = '80px';
+  @Input() itemWidth = '80px';
 
   selected: string;
 

@@ -1,0 +1,39 @@
+GET http://localhost:3000/projects?members_like=1
+
+###
+
+GET http://localhost:3000/projects
+###
+
+GET http://localhost:3000/taskLists
+###
+
+POST http://localhost:3000/taskLists
+Content-Type: application/json
+
+{
+  "order": 1,
+  "name": "list1",
+  "projectId": "1"
+}
+
+###
+PUT http://localhost:3000/taskLists/1
+Content-Type: application/json
+
+{
+  "order": 2,
+  "name": "list2",
+  "projectId": "1"
+}
+
+###
+PATCH  http://localhost:3000/taskLists/1
+Content-Type: application/json
+
+{
+  "name": "list3"
+}
+
+###
+DELETE  http://localhost:3000/taskLists/1

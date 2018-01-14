@@ -7,6 +7,9 @@ import { HostBinding } from '@angular/core';
 import { slideToRight } from '../../anims/router.anim';
 import { listAnimation } from '../../anims/list.anim';
 import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ProjectService } from '../../services/project.service';
+import * as _ from 'lodash';
+import { Project } from '../../domain';
 
 @Component({
   selector: 'app-project-list',
@@ -27,33 +30,41 @@ export class ProjectListComponent implements OnInit {
 
   @HostBinding('@routeAnim') state;
 
-  projects = [
-    {
-      "id": 1,
-      "name": "企业协作平台",
-      "desc": "这是一个企业内部项目",
-      "coverImg": "assets/img/covers/0.jpg"
-    },
-    {
-      "id": 2,
-      "name": "自动化测试",
-      "desc": "这是一个企业内部项目",
-      "coverImg": "assets/img/covers/1.jpg"
-    },
-  ];
+  projects;
 
-  constructor(private dialog: MdDialog, private cd: ChangeDetectorRef) { }
+  constructor(private dialog: MdDialog, private cd: ChangeDetectorRef, private service$: ProjectService) { }
 
   ngOnInit() {
+    this.service$.get('1').subscribe(projects => {
+      this.projects = projects;
+      this.cd.markForCheck(); // 告诉angular在onpush模式下，这边依然需要脏值检测
+    });
   }
 
   openNewProjectDialog() {
-    const dialogRef = this.dialog.open(NewProjectComponent, {data: {title: '新增项目：'}});
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result)
-      this.projects = [...this.projects, {id: 3, name: '一个新项目', desc: '这是一个新项目', coverImg: 'assets/img/covers/3.jpg'}]
+    const selectedImg = `/assets/img/covers/${Math.floor(Math.random() * 40)}_tn.jpg`;
+    const dialogRef = this.dialog.open(
+      NewProjectComponent, 
+      {data: {thumbnails: this.getThumbnails(), img: selectedImg}}); // 打开dialog的时候传入 封面集合 和随意选中的默认封面
+    
+    // 这个时候返回后，add之后还是一个流，页面中没有添加成功
+    /* // dialogRef 关闭之后    过滤一下，确保关闭的时候有值project
+    dialogRef.afterClosed().filter(n => n).subscribe(project => {
+      this.service$.add(project); // 这也是一个流，但是我们一般不再subscribe中，  再次subscribe
+
+      // this.projects = [...this.projects, {id: 3, name: '一个新项目', desc: '这是一个新项目', coverImg: 'assets/img/covers/3.jpg'}]
       this.cd.markForCheck(); // 告诉angular在onpush模式下，这边依然需要检查
-    });
+    }); */
+
+    dialogRef.afterClosed()
+      .take(1) // 不管是点击  保存 还是 关闭，我们只取 一个，所以不用 unsubscribe。
+      .filter(n => n) // 过滤一下，确保关闭的时候有值project
+      .map(val => ({...val, coverImg: this.buildImgSrc(val.coverImg)})) // 把封面的缩略图， 换成 大图
+      .switchMap(v => this.service$.add(v))
+      .subscribe(project => {
+        this.projects = [...this.projects, project];
+        this.cd.markForCheck(); // 告诉angular在onpush模式下，这边依然需要检查
+      });
   }
 
   launchInviteDialog() {
@@ -61,8 +72,21 @@ export class ProjectListComponent implements OnInit {
     // dialogRef.afterClosed().subscribe(result => console.log(result));
   }
 
-  launchUpdateDialog() {
-  const dialogRef = this.dialog.open(NewProjectComponent, {data: {title: '编辑项目：'}});
+  launchUpdateDialog(project: Project) {
+    const dialogRef = this.dialog.open(
+      NewProjectComponent, 
+      {data: {thumbnails: this.getThumbnails(), project: project}}); // 打开dialog的时候传入 封面集合 和 要编辑的 project
+
+    dialogRef.afterClosed()
+      .take(1) // 不管是点击  保存 还是 关闭，我们只取 一个，所以不用 unsubscribe。
+      .filter(n => n) // 过滤一下，确保关闭的时候有值project
+      .map(val => ({...val, id: project.id, coverImg: this.buildImgSrc(val.coverImg)})) // 把封面的缩略图， 换成 大图
+      .switchMap(v => this.service$.update(v))
+      .subscribe(project => {
+        const index = this.projects.map(p => p.id).indexOf(project.id);
+        this.projects = [...this.projects.slice(0, index), project, ...this.projects.slice(index + 1)]
+        this.cd.markForCheck(); // 告诉angular在onpush模式下，这边依然需要检查
+      });
   }
 
   launchConfirmDialog(project) {
@@ -72,6 +96,18 @@ export class ProjectListComponent implements OnInit {
       this.projects = this.projects.filter(p => p.id !== project.id);
       this.cd.markForCheck();      
     });
+  }
+
+  // 获取封面
+  private getThumbnails() {
+    return _.range(0, 40)
+      .map(i => `/assets/img/covers/${i}_tn.jpg`);
+  }
+
+
+  // 处理封面的链接，如果是缩略图  要换成 大图
+  private buildImgSrc(img: string): string {
+    return img.indexOf('_') > -1 ? img.split('_')[0] + '.jpg' : img; 
   }
 
 }
