@@ -1,5 +1,36 @@
 {
-  "taskLists": [],
+  "users": [
+    {
+      "password": "ls123456",
+      "name": "李四",
+      "avatar": "avatars:svg-2",
+      "email": "lisi@163.com",
+      "id": "1",
+      "projectIds": [
+        "1"
+      ]
+    },
+    {
+      "password": "ls123456",
+      "name": "李明",
+      "avatar": "avatars:svg-2",
+      "email": "liming@163.com",
+      "id": "2",
+      "projectIds": [
+        "1"
+      ]
+    },
+    {
+      "password": "Ls123456",
+      "name": "张三",
+      "avatar": "avatars:svg-2",
+      "email": "zhangsan@163.com",
+      "id": "3",
+      "projectIds": [
+        "2"
+      ]
+    }
+  ],
   "projects": [
     {
       "id": "1",
@@ -27,6 +58,8 @@
       "id": "BXJ7jqe"
     }
   ],
+  "taskLists": [],
+  "tasks": [],  
   "quotes": [
     {
       "id": "0",
