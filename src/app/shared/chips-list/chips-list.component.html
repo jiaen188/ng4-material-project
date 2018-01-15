@@ -15,6 +15,7 @@
 </div>
                                                 <!-- displayUser是个函数 -->
 <md-autocomplete #autoMember="mdAutocomplete" [displayWith]="displayUser">
+            <!-- angular 中支持 直接在html中 ngFor一个Observable，只要加上 | async，不需要引入onDestory中取消订阅unsubscription -->
   <md-option *ngFor="let item of memberResult$ | async"
     [value]="item"
     (onSelectionChange)="handleMemberSelection(item)">

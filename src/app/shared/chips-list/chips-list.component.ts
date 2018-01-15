@@ -38,7 +38,11 @@ export class ChipsListComponent implements OnInit, ControlValueAccessor {
       memberSearch: ['']
     });
 
-    this.memberResult$ = this.form.get('memberSearch').valueChanges
+    // 一般情况下，我们要给这个流 订阅后在赋值给本地的 memberResult对象
+    // 这样还要引入 onDestory，以及subscription为了取消订阅，
+    // angular 中支持 直接在html中 ngFor一个Observable，只要加上 | async
+    // 节省了书写
+    this.memberResult$ = this.form.get('memberSearch').valueChanges  
       .debounceTime(300)
       .distinctUntilChanged()
       .filter(s => s && s.length > 1)
