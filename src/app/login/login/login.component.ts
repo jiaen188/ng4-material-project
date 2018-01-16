@@ -6,6 +6,8 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import * as fromRoot from  '../../reducers';
 import * as actions from '../../actions/quote.action';
+import * as authActions from '../../actions/auth.action';
+
 
 @Component({
   selector: 'app-login',
@@ -40,6 +42,7 @@ export class LoginComponent implements OnInit {
         this.store$.dispatch(new actions.LoadSucsessAction(q)); // 改成强类型
       }); */
 
+      // 直接dispatch一个LOAD，effects会处理LOAD
       this.store$.dispatch(new actions.LoadAction(null));
   }
 
@@ -51,29 +54,18 @@ export class LoginComponent implements OnInit {
     });**/
 
     this.form = this.fb.group({
-      email: ['wang@local.dev', Validators.compose([Validators.required, Validators.email, this.validate])],
+      email: ['wang@local.dev', Validators.compose([Validators.required, Validators.email])],
       password: ['', Validators.required]
     })
   }
 
   onSubmit({ value, valid }, ev: Event) {
     ev.preventDefault();
-    console.log(JSON.stringify(value));
-    console.log(valid);
+    
     // this.form.controls['email'].setValidators(this.validate); // this.validate可以放在表单验证和其他验证一起，也可以在submit的时候在验证
+    if (!valid) {
+      return;
+    }
+    this.store$.dispatch(new authActions.LoginAction(value));
   }
-
-  validate(c: FormControl): {[key: string]: any} {
-    if (!c.value) {
-      return null;
-    }
-    const pattern = /^wang+/;
-    if (pattern.test(c.value)) {
-      return null;
-    }
-    return {
-      emailNotValid: 'the email must start with wang'
-    }
-  }
-
 }

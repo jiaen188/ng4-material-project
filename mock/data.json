@@ -29,6 +29,17 @@
       "projectIds": [
         "2"
       ]
+    },
+    {
+      "email": "wangwu@163.com",
+      "name": "wangwu",
+      "password": "123456",
+      "repeat": "123456",
+      "avatar": "avatars:svg-8",
+      "dateOfBirth": "1995-01-01",
+      "address": null,
+      "identity": null,
+      "id": "5bb6m0r"
     }
   ],
   "projects": [
@@ -59,7 +70,7 @@
     }
   ],
   "taskLists": [],
-  "tasks": [],  
+  "tasks": [],
   "quotes": [
     {
       "id": "0",

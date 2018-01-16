@@ -7,19 +7,24 @@ import { compose } from '@ngrx/core/compose';
 import { createSelector } from 'reselect';
 
 import * as fromQuote from './quote.reducer';
+import * as fromAuth from './auth.reducer';
 
 import { environment } from '../../environments/environment';
+import { Auth } from '../domain/auth.model';
 
 export interface State { // 定义一个全局的state 把reduceers文件夹下，所有新增的 state都存放在这
-  quote: fromQuote.State
+  quote: fromQuote.State;
+  auth: Auth;
 };
 
 const initialState: State = { //定义全局的初始值initialState 把reducers文件夹下， 所有的初始化  initialState 放这
-  quote: fromQuote.initialState
+  quote: fromQuote.initialState,
+  auth: fromAuth.initialState
 };
 
 const reducers = { //定义一个全局的reducers 导入所有的各自xx.reducer.ts下的  reducer
   quote: fromQuote.reducer,
+  auth: fromAuth.reducer
 };
 
 const productionReducers: ActionReducer<State> = combineReducers(reducers); // 将reducer合并, 为生产环境准备的reducers
@@ -33,6 +38,7 @@ export function reducer(state = initialState, action: any): State {
 }
 
 export const getQuoteState = (state: State) => state.quote;
+export const getAuthState = (state: State) => state.auth; // 获取全局对象中的 auth
 
 export const getQuote = createSelector(getQuoteState, fromQuote.getQuote);
                         // createSelector具有记忆功能，如果下次请求的参数，和上一次的参数相同，就会直接从内存中取

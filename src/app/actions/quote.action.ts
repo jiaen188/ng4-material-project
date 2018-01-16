@@ -1,6 +1,6 @@
-export const QUOTE = 'Quote';
+/* export const QUOTE = 'Quote';
 export const QUOTE_SUCCESS = 'Quote Success';
-export const QUOTE_FAIL = 'Quote Fail';
+export const QUOTE_FAIL = 'Quote Fail'; */
 import { type } from '../utils/type.util';
 import { Action } from '@ngrx/store';
 import { Quote } from '../domain/quote.model';
