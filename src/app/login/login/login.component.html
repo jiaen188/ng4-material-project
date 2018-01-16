@@ -31,12 +31,14 @@
         每日佳句
       </md-card-title>
       <md-card-subtitle>
-        {{quote.cn}}
+        <!-- {{quote.cn}}   -->
+        <!-- 原来我们是通过一个 对象绑定，现在通过 async方式绑定流 -->
+        {{(quote$ | async).cn}}
       </md-card-subtitle>
     </md-card-header>
-    <img md-card-image [src]="quote.pic" alt="quote img">
+    <img md-card-image [src]="(quote$ | async).pic" alt="quote img">
     <md-card-content>
-      {{quote.en}}
+      {{(quote$ | async).en}}
     </md-card-content>
   </md-card>
 </form>
