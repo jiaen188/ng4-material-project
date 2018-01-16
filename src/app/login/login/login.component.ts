@@ -1,6 +1,6 @@
 import { Component, OnInit, group } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
-import { QuoteService } from '../../services/quote.service';
+// import { QuoteService } from '../../services/quote.service';
 import { Quote } from '../../domain/quote.model';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
@@ -24,20 +24,23 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder, 
-    private quoteService$: QuoteService,
+    // private quoteService$: QuoteService,
     private store$: Store<fromRoot.State>) { 
 
     // this.quote$ = this.store$.select(state => state.quote.quote); // 我们从store中获取值，不关心顺序，只管拿，不管什么时候放，所以可以写在前面
     this.quote$ = this.store$.select(fromRoot.getQuote);
 
-    // 获取每日一句的数据
+    // 我们在effect中处理了quote的LOAD，所以我们不用再这里用quoteService$ ,请求quote数据了。 可以直接dispatch
+    /* // 获取每日一句的数据
     this.quoteService$
       .getQuote()
       // .subscribe(q => this.quote = q); // 原来我们是直接获取后赋值
       .subscribe(q => {
         // this.store$.dispatch({type: actions.QUOTE_SUCCESS, payload: q}); // 我们set这么一个最新的action出去
         this.store$.dispatch(new actions.LoadSucsessAction(q)); // 改成强类型
-      });
+      }); */
+
+      this.store$.dispatch(new actions.LoadAction(null));
   }
 
   ngOnInit() {

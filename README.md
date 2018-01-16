@@ -26,3 +26,8 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+`npm install -g json-server@0.12.1` 为了启动json服务
+ `json-server ./mock/data.json --watch` 启动json服务，能访问localhost:30000
+ `npm install -g concurrently@3.5.0` 为了合并node 命令，不然每次我们需要先 启动json服务，再`ng serve`
+ 修改了package.json后，以后只要运行`npm start` 就可以启动服务

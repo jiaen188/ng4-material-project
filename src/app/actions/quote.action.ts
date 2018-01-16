@@ -11,7 +11,7 @@ import { Quote } from '../domain/quote.model';
  */
 export const ActionTypes = {
   LOAD:           type('[Quote] Load'),
-  LOAD_SUCCESS:    type('[Quote] Load SUCCESS'),
+  LOAD_SUCCESS:   type('[Quote] Load SUCCESS'),
   LOAD_FAIL:      type('[Quote] Load FAIL'),
 };
 

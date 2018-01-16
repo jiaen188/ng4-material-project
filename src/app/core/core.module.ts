@@ -7,6 +7,7 @@ import { MdIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { ServicesModule } from '../services/services.module';
+import { AppEffectsModule } from '../effects';
 import { AppStoreModule } from '../reducers'
 import { SharedModule } from '../shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,6 +47,7 @@ import 'rxjs/add/operator/take';
     AppRoutingModule,
     ServicesModule.forRoot(), // 不写元数据，通过静态方法提供module
     AppStoreModule,
+    AppEffectsModule,
     BrowserAnimationsModule,
   ],
   declarations: [
