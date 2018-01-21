@@ -1,7 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-import { Project } from '../domain';
+import { Project, User } from '../domain';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
 
 @Injectable()
 export class ProjectService {
@@ -51,5 +52,21 @@ export class ProjectService {
     return this.http
       .get(uri, {params: {'members_like':userId}})
       .map(res => res.json() as Project[]);
+  }
+
+  invite(projectId: string, users: User[]): Observable<Project> {
+    const uri = `${this.config.uri}/${this.domain}/${projectId}`;
+    
+    return this.http
+      .get(uri)  // 先取得这个project
+      .map(res => res.json())
+      .switchMap((project: Project) => {
+        const existingMembers = project.members; // 现在这个project的成员members
+        const invitedIds = users.map(user => user.id); // 邀请人的成员users
+        const newIds = _.union(existingMembers, invitedIds); // 将两个数组，取并集
+        return this.http
+        .patch(uri, JSON.stringify({members: newIds}), {headers: this.headers}) // 然后通过更新后的 project取更新project
+        .map(res => res.json());
+      });
   }
 }

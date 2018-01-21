@@ -65,8 +65,11 @@
     {
       "name": "test",
       "desc": null,
-      "coverImg": "/assets/img/covers/35.jpg",
-      "id": "BXJ7jqe"
+      "coverImg": "/assets/img/covers/34.jpg",
+      "members": [
+        "undefined"
+      ],
+      "id": "0qV3rHK"
     }
   ],
   "taskLists": [],
