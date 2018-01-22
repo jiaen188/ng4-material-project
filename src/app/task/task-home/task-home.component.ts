@@ -6,6 +6,12 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { NewTaskListComponent } from 'app/task/new-task-list/new-task-list.component';
 import { HostBinding } from '@angular/core';
 import { slideToRight } from "../../anims/router.anim"
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../../reducers';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { TaskList } from '../../domain/task-list.model';
+import * as actions from '../../actions/task-list.action'
 
 @Component({
   selector: 'app-task-home',
@@ -20,7 +26,7 @@ export class TaskHomeComponent implements OnInit {
 
   @HostBinding('@routeAnim') state;
 
-  lists = [
+  /* lists = [
     {
       id: 1,
       name: '代办',
@@ -85,9 +91,20 @@ export class TaskHomeComponent implements OnInit {
         }
       ]
     }
-  ];
+  ]; */
 
-  constructor(private dialog: MdDialog, private cd: ChangeDetectorRef) { }
+  projectId$: Observable<string>;
+  lists$: Observable<TaskList[]>;
+
+  constructor(
+    private dialog: MdDialog, 
+    private cd: ChangeDetectorRef,
+    private store$: Store<fromRoot.State>,
+    private route: ActivatedRoute
+  ) { 
+    this.projectId$ = this.route.paramMap.pluck('id');
+    this.lists$ = this.store$.select(fromRoot.getTaskLists);
+  }
 
   ngOnInit() {
   }
@@ -97,26 +114,36 @@ export class TaskHomeComponent implements OnInit {
   }
 
   launchCopyTaskDialog() {
-    const dialogRef = this.dialog.open(CopyTaskComponent, {data: {lists: this.lists}});
+    // const dialogRef = this.dialog.open(CopyTaskComponent, {data: {lists: this.lists}});
   }
 
   launchUpdateTaskDialog(task) {
     const dialogRef = this.dialog.open(NewTaskComponent, {data: {title: '修改任务：',task: task}});
   }
 
-  launchConfirmDialog() {
+  launchConfirmDialog(list: TaskList) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {data: {title: '删除任务列表：', content: '您确认删除任务列表么？'}});
-    dialogRef.afterClosed().subscribe(result => console.log(result));
+    // dialogRef.afterClosed().subscribe(result => console.log(result));
+    dialogRef.afterClosed()
+      .take(1)
+      .filter(n => n) 
+      .subscribe(result => this.store$.dispatch(new actions.DeleteAction(list)));
   }
 
-  launchEditListDialog() {
-    const dialogRef = this.dialog.open(NewTaskListComponent, {data: {title: '更改任务列表：'}});
-    dialogRef.afterClosed().subscribe(result => console.log(result));
+  launchEditListDialog(list: TaskList) {
+    const dialogRef = this.dialog.open(NewTaskListComponent, {data: {title: '更改任务列表：', taskList: list}});
+    // dialogRef.afterClosed().subscribe(result => console.log(result));
+    dialogRef.afterClosed()
+    .take(1)
+    .subscribe(result => this.store$.dispatch(new actions.UpdateAction({...result, id: list.id}))); // dialog传回来的result只含有name，我们要把id加上
   }
 
-  launchNewListDialog() {
+  launchNewListDialog(ev: Event) {
     const dialogRef = this.dialog.open(NewTaskListComponent, {data: {title: '新建任务列表：'}});
-    dialogRef.afterClosed().subscribe(result => console.log(result));
+    // dialogRef.afterClosed().subscribe(result => console.log(result));
+    dialogRef.afterClosed()
+      .take(1)
+      .subscribe(result => this.store$.dispatch(new actions.AddAction(result)));
   }
 
   handleMove(srcData, list) {

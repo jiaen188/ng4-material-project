@@ -155,4 +155,9 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     return img.indexOf('_') > -1 ? img.split('_')[0] + '.jpg' : img;
   }
 
+  // 选择某个project，但是没有触发load tasklist的action （当然我们可以在下面接上一个load tasklist的action）
+  // 但是更好的是，effects 是可以串联的。在project.effect中
+  selectProject(project: Project) {
+    this.store$.dispatch(new actions.SelectProjectAction(project));
+  }
 }

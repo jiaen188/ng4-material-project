@@ -17,6 +17,7 @@ export class ProjectItemComponent implements OnInit {
   @Output() onInvite = new EventEmitter<void>();
   @Output() onEdit = new EventEmitter<void>();
   @Output() onDel = new EventEmitter<void>();
+  @Output() onSelected = new EventEmitter<void>();
   @HostBinding('@card') cardState = 'out';
 
   constructor() { }
@@ -34,16 +35,23 @@ export class ProjectItemComponent implements OnInit {
     this.cardState = 'out';
   }
 
-  onInviteClick() {
+  onInviteClick(ev: Event) {
+    ev.stopPropagation();
     this.onInvite.emit();
   }
 
-  onEditClick() {
+  onEditClick(ev: Event) {
+    ev.stopPropagation();    
     this.onEdit.emit();
   }
 
-  onDeleteClick() {
+  onDeleteClick(ev: Event) {
+    ev.stopPropagation();    
     this.onDel.emit();
+  }
+
+  onClick() {
+    this.onSelected.emit();
   }
 
 }

@@ -6,8 +6,9 @@ import { go } from '@ngrx/router-store';
 import * as actions from '../actions/project.action'
 import { AuthService } from '../services/auth.service';
 import { User } from '../domain';
-import { ProjectService } from 'app/services/project.service';
+import { ProjectService } from '../services/project.service';
 import * as fromRoot from '../reducers';
+import * as TaskListactions from '../actions/task-list.action'
 
 @Injectable()
 export class ProjectEffects { // 这个effect是为了处理PROJECT这个参数
@@ -57,6 +58,13 @@ export class ProjectEffects { // 这个effect是为了处理PROJECT这个参数
     .ofType(actions.ActionTypes.SELECT_PROJECT) 
     .map(toPayload)
     .map(project => go([`/tasklists/${project.id}`])); // 传入的是project， 跳转到对应的tasklist列表
+
+  // 对于 select_project 这个action，除了有上面的路由跳转， 还需要有下面的加载对应的tasklists
+  @Effect()
+  loadTaskLists$: Observable<Action> = this.actions$ 
+    .ofType(actions.ActionTypes.SELECT_PROJECT) 
+    .map(toPayload)
+    .map(project => new TaskListactions.LoadAction(project.id)); 
 
   @Effect()
   invite$: Observable<Action> = this.actions$

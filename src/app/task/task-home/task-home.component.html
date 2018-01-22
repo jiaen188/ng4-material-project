@@ -11,14 +11,14 @@
   [dragData]="list"
   (dropped)="handleMove($event, list)"
   [ngStyle]="{'order': list.order}"
-  *ngFor="let list of lists" 
+  *ngFor="let list of lists$ | async" 
   style="box-shadow: 1px 1px 3px #000; margin-right: 15px">
     <app-task-header 
       [header]="list.name" 
       (newTask)="launchNewTaskDialog()"
       (moveAll)="launchCopyTaskDialog()"
-      (delList)="launchConfirmDialog()"
-      (onEditList)="launchEditListDialog()">
+      (delList)="launchConfirmDialog(list)"
+      (onEditList)="launchEditListDialog(list)">
     </app-task-header>
     <app-quick-task (quickTask)="handleQuickTask($event)"></app-quick-task>
     <app-task-item 
@@ -29,6 +29,6 @@
   </app-task-list>
 </div>
 
-<button class="fab-button" md-fab type="button" (click)="launchNewListDialog()">
+<button class="fab-button" md-fab type="button" (click)="launchNewListDialog($event)">
   <md-icon>add</md-icon>
 </button>
