@@ -1,27 +1,32 @@
 import { type } from '../utils/type.util';
 import { Action } from '@ngrx/store';
-import { User, TaskList } from '../domain';
+import { User, Project } from '../domain';
+
+export interface UserProject {
+  user: User;
+  projectId: string;
+}
 
 /**
  * For each action type in an action group, make a simple
  * enum object for all of this group's action types.
  */
-export const ActionTypes = { // tasklist 组件，除了增，删，改，查功能，还有拖拽功能
-  ADD:                type('[TaskList] Add'),
-  ADD_SUCCESS:        type('[TaskList] Add Success'),
-  ADD_FAIL:           type('[TaskList] Add Fail'),
-  UPDATE:             type('[TaskList] Update'),
-  UPDATE_SUCCESS:     type('[TaskList] Update Success'),
-  UPDATE_FAIL:        type('[TaskList] Update Fail'),
-  DELETE:                   type('[TaskList] Delete'),
-  DELETE_SUCCESS:           type('[TaskList] Delete Success'),
-  DELETE_FAIL:              type('[TaskList] Delete Fail'),
-  LOAD:                   type('[TaskList] Load'),
-  LOAD_SUCCESS:           type('[TaskList] Load Success'),
-  LOAD_FAIL:              type('[TaskList] Load Fail'),
-  SWAP:                     type('[TaskList] Swap'),
-  SWAP_SUCCESS:             type('[TaskList] Swap Success'),
-  SWAP_FAIL:                type('[TaskList] Swap Fail'),
+export const ActionTypes = { 
+  ADD:                type('[User] Add User Project'),
+  ADD_SUCCESS:        type('[User] Add User Project Success'),
+  ADD_FAIL:           type('[User] Add User Project Fail'),
+  UPDATE:             type('[User] Update User Project'),
+  UPDATE_SUCCESS:     type('[User] Update User Project Success'),
+  UPDATE_FAIL:        type('[User] Update User Project Fail'),
+  DELETE:                   type('[User] Delete User Project'),
+  DELETE_SUCCESS:           type('[User] Delete User Project Success'),
+  DELETE_FAIL:              type('[User] Delete User Project Fail'),
+  LOAD:                   type('[User] Load Users By Projects'),
+  LOAD_SUCCESS:           type('[User] Load Users By Projects Success'),
+  LOAD_FAIL:              type('[User] Load Users By Projects Fail'),
+  SEARCH:                     type('[User] Search'),
+  SEARCH_SUCCESS:             type('[User] Search Success'),
+  SEARCH_FAIL:                type('[User] Search Fail'),
 };
 
 /**
@@ -32,13 +37,13 @@ export const ActionTypes = { // tasklist 组件，除了增，删，改，查功
 export class AddAction implements Action {
   type = ActionTypes.ADD;
 
-  constructor(public payload: TaskList) { }
+  constructor(public payload: UserProject) { }
 }
 
 export class AddSuccessAction implements Action {
   type = ActionTypes.ADD_SUCCESS;
 
-  constructor(public payload: TaskList) { }
+  constructor(public payload: User) { }
 }
 
 export class AddFailAction implements Action {
@@ -50,13 +55,13 @@ export class AddFailAction implements Action {
 export class UpdateAction implements Action {
   type = ActionTypes.UPDATE;
 
-  constructor(public payload: TaskList) { }
+  constructor(public payload: Project) { }
 }
 
 export class UpdateSuccessAction implements Action {
   type = ActionTypes.UPDATE_SUCCESS;
 
-  constructor(public payload: TaskList) { }
+  constructor(public payload: User[]) { }
 }
 
 export class UpdateFailAction implements Action {
@@ -68,13 +73,13 @@ export class UpdateFailAction implements Action {
 export class DeleteAction implements Action {
   type = ActionTypes.DELETE;
 
-  constructor(public payload: TaskList) { }
+  constructor(public payload: UserProject) { }
 }
 
 export class DeleteSuccessAction implements Action {
   type = ActionTypes.DELETE_SUCCESS;
 
-  constructor(public payload: TaskList) { }
+  constructor(public payload: User) { }
 }
 
 export class DeleteFailAction implements Action {
@@ -89,10 +94,10 @@ export class LoadAction implements Action {
   constructor(public payload: string) { }
 }
 
-export class LoadSuccessAction implements Action { // load 返回的应该是porject的数组
+export class LoadSuccessAction implements Action { 
   type = ActionTypes.LOAD_SUCCESS;
 
-  constructor(public payload: TaskList[]) { }
+  constructor(public payload: User[]) { }
 }
 
 export class LoadFailAction implements Action {
@@ -101,20 +106,20 @@ export class LoadFailAction implements Action {
   constructor(public payload: string) { }
 }
 
-export class SwapAction implements Action { // 邀请成员，应该指定projectId 和成员数组 members
-  type = ActionTypes.SWAP;
+export class SearchAction implements Action { // 移动task的时候，需要task本身的id ，和目标的tasklist的id
+  type = ActionTypes.SEARCH;
 
-  constructor(public payload: { src: TaskList; target: TaskList }) { }
+  constructor(public payload: string) { }
 }
 
-export class SwapSuccessAction implements Action {
-  type = ActionTypes.SWAP_SUCCESS;
+export class SearchSuccessAction implements Action { // 成功后返回的还是一个task，不过tasklistid已经改变
+  type = ActionTypes.SEARCH_SUCCESS;
 
-  constructor(public payload: TaskList[]) { }
+  constructor(public payload: User[]) { }
 }
 
-export class SwapFailAction implements Action {
-  type = ActionTypes.SWAP_FAIL;
+export class SearchFailAction implements Action {
+  type = ActionTypes.SEARCH_FAIL;
 
   constructor(public payload: string) { }
 }
@@ -136,6 +141,6 @@ export type Actions
   | LoadAction
   | LoadSuccessAction
   | LoadFailAction
-  | SwapAction
-  | SwapSuccessAction
-  | SwapFailAction;
+  | SearchAction
+  | SearchSuccessAction
+  | SearchFailAction;

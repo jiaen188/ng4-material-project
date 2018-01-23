@@ -5,10 +5,11 @@ import { Action, Store } from '@ngrx/store';
 import { go } from '@ngrx/router-store';
 import * as actions from '../actions/project.action'
 import { AuthService } from '../services/auth.service';
-import { User } from '../domain';
+import { User, Project } from '../domain';
 import { ProjectService } from '../services/project.service';
 import * as fromRoot from '../reducers';
-import * as TaskListactions from '../actions/task-list.action'
+import * as TaskListactions from '../actions/task-list.action';
+import * as Useractions from '../actions/user.action';
 
 @Injectable()
 export class ProjectEffects { // 这个effect是为了处理PROJECT这个参数
@@ -54,25 +55,50 @@ export class ProjectEffects { // 这个effect是为了处理PROJECT这个参数
     );
 
   @Effect()
-  selectProject$: Observable<Action> = this.actions$ 
-    .ofType(actions.ActionTypes.SELECT_PROJECT) 
+  selectProject$: Observable<Action> = this.actions$
+    .ofType(actions.ActionTypes.SELECT_PROJECT)
     .map(toPayload)
     .map(project => go([`/tasklists/${project.id}`])); // 传入的是project， 跳转到对应的tasklist列表
 
   // 对于 select_project 这个action，除了有上面的路由跳转， 还需要有下面的加载对应的tasklists
   @Effect()
-  loadTaskLists$: Observable<Action> = this.actions$ 
-    .ofType(actions.ActionTypes.SELECT_PROJECT) 
+  loadTaskLists$: Observable<Action> = this.actions$
+    .ofType(actions.ActionTypes.SELECT_PROJECT)
     .map(toPayload)
-    .map(project => new TaskListactions.LoadAction(project.id)); 
+    .map(project => new TaskListactions.LoadAction(project.id));
 
   @Effect()
   invite$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.INVITE) 
+    .ofType(actions.ActionTypes.INVITE)
     .map(toPayload)
     .switchMap(({ projectId, members }) => this.service$.invite(projectId, members)
       .map(project => new actions.InviteSuccessAction(project))
       .catch(err => Observable.of(new actions.InviteFailAction(JSON.stringify(err))))
+    );
+
+  // 当project加载成功后，还会隐性的加载task的user内容，task上有user的头像，用户的名字等等信息
+  @Effect()
+  loadUsers$: Observable<Action> = this.actions$
+    .ofType(actions.ActionTypes.LOAD_SUCCESS)
+    .map(toPayload)
+    .switchMap((projects: Project[]) => Observable.from(projects.map(prj => prj.id))
+      .map(projectId => new Useractions.LoadAction(projectId))
+    );
+
+  @Effect()
+  addUserProject$: Observable<Action> = this.actions$
+    .ofType(actions.ActionTypes.LOAD_SUCCESS)
+    .map(toPayload)
+    .switchMap((projects: Project[]) => Observable.from(projects.map(prj => prj.id))
+      .map(projectId => new Useractions.LoadAction(projectId))
+    );
+
+  @Effect()
+  removeUserProject$: Observable<Action> = this.actions$
+    .ofType(actions.ActionTypes.LOAD_SUCCESS)
+    .map(toPayload)
+    .switchMap((projects: Project[]) => Observable.from(projects.map(prj => prj.id))
+      .map(projectId => new Useractions.LoadAction(projectId))
     );
 
   constructor(

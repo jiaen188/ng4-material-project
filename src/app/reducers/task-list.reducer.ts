@@ -24,7 +24,8 @@ const addTaskList = (state, action) => {
   }
   const newIds = [...state.ids, taskList.id];
   const newEntities = { ...state.entities, [taskList.id]: taskList }; // 添加id对应的taskList
-  return { ...state, ids: newIds, entities: newEntities };
+  const newSelectedIds = [...state.selectedIds, taskList.id];
+  return { ...state, ids: newIds, entities: newEntities, selectedIds: newSelectedIds };
 }
 
 const updateTaskList = (state, action) => {
@@ -58,6 +59,7 @@ const loadTaskLists = (state, action) => {// loadtaskList的时候，传进来�
     ...state,
     ids: [...state.ids, ...newIds],
     entities: { ...state.entities, ...newEntities },
+    selectedIds: incomingIds
   };
 }
 
@@ -135,6 +137,6 @@ export const getEntities = (state: State) => state.entities;
 export const getSelectedIds = (state: State) => state.selectedIds;
 
 // 最终得到taskList的数组
-export const getSelected = createSelector(getIds, getEntities, (ids, entities) => {
-  return ids.map(id => entities[id]);
+export const getSelected = createSelector(getSelectedIds, getEntities, (selectedIds, entities) => {
+  return selectedIds.map(id => entities[id]);
 });
