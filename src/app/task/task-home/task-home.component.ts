@@ -11,7 +11,8 @@ import * as fromRoot from '../../reducers';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TaskList } from '../../domain/task-list.model';
-import * as actions from '../../actions/task-list.action'
+import * as actions from '../../actions/task-list.action';
+import * as taskActions from '../../actions/task.action';
 
 @Component({
   selector: 'app-task-home',
@@ -109,8 +110,14 @@ export class TaskHomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  launchNewTaskDialog() {
-    const dialogRef = this.dialog.open(NewTaskComponent, {data: {title: '新建任务：'}});
+  launchNewTaskDialog(list) {
+    // const dialogRef = this.dialog.open(NewTaskComponent, {data: {title: '新建任务：'}});
+
+    const user$ = this.store$.select(fromRoot.getAuthState).map(auth => auth.user); // 新建task的时候，我们先取出user
+    user$.take(1)
+      .map(user => this.dialog.open(NewTaskComponent, {data: {title: '新建任务：', owner: user}})) // 然后给弹出框 赋初始值 user 
+      .switchMap(dialogRef => dialogRef.afterClosed().take(1).filter(n => n)) // 同时监测 弹出框的关闭，如果是确定按钮， 就发出add task的action
+      .subscribe(val => this.store$.dispatch(new taskActions.AddAction({...val, taskListId: list.id, completed: false, createDate: new Date()})))
   }
 
   launchCopyTaskDialog() {

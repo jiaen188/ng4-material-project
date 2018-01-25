@@ -3,7 +3,8 @@ import { Actions, toPayload, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from '@ngrx/store';
 import { go } from '@ngrx/router-store';
-import * as actions from '../actions/task-list.action'
+import * as actions from '../actions/task-list.action';
+import * as Taskactions from '../actions/task.action';
 import { User } from '../domain';
 import * as fromRoot from '../reducers';
 import { TaskListService } from '../services/task-list.service';
@@ -56,6 +57,13 @@ export class TaskListEffects { // 这个effect是为了处理PROJECT这个参数
       .map(taskLists => new actions.SwapSuccessAction(taskLists))
       .catch(err => Observable.of(new actions.SwapFailAction(JSON.stringify(err))))
     );
+
+  // tasklist加载成功后，会有一个隐性的加载task 的action
+  @Effect()
+  loadTask$: Observable<Action> = this.actions$ 
+    .ofType(actions.ActionTypes.LOAD_SUCCESS) 
+    .map(toPayload)
+    .map(lists => new Taskactions.LoadAction(lists));
 
   constructor(
     private actions$: Actions,

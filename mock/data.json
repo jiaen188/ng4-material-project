@@ -72,7 +72,16 @@
       "id": "0qV3rHK"
     }
   ],
-  "taskLists": [],
+  "taskLists": [
+    {
+      "name": "test1",
+      "id": 1
+    },
+    {
+      "name": "test2",
+      "id": 2
+    }
+  ],
   "tasks": [],
   "quotes": [
     {

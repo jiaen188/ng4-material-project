@@ -28,7 +28,7 @@ export class ChipsListComponent implements OnInit, ControlValueAccessor {
   @Input() placeholderText =  '请输入成员 email';
   @Input() label = '添加/修改成员';
   form: FormGroup;
-  items: User[] = [];
+  items: User[];
   memberResult$: Observable<User[]>;
 
   constructor(private fb: FormBuilder, private service: UserService) { }
@@ -52,6 +52,8 @@ export class ChipsListComponent implements OnInit, ControlValueAccessor {
   private propagateChange = (_: any) => { };  
 
   writeValue(obj: User[]): void {
+    console.log("写入组件的user");
+    console.log(obj);
     if (obj && this.multiple) {
       const userEntities = obj.reduce((e, c) => ({...e, c}), {});
       if (this.items) {

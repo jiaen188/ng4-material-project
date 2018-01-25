@@ -9,8 +9,9 @@ import * as fromRoot from '../reducers';
 import { UserService } from '../services/user.service';
 
 @Injectable()
-export class UserEffects { 
+export class UserEffects { // user其实是一个隐性的effect
 
+  // 当加载project的时候也会需要加载user的信息
   @Effect()
   loadUsers$: Observable<Action> = this.actions$
     .ofType(actions.ActionTypes.LOAD) // 筛选 user里面的LOAD
@@ -20,6 +21,7 @@ export class UserEffects {
       .catch(err => Observable.of(new actions.LoadFailAction(JSON.stringify(err))))
   );
 
+  // 当新增project的时候，需要在成员中加入对应的user
   @Effect()
   addUserProjectRef$: Observable<Action> = this.actions$
     .ofType(actions.ActionTypes.ADD) // 筛选 user里面的ADD
@@ -29,6 +31,7 @@ export class UserEffects {
       .catch(err => Observable.of(new actions.AddFailAction(JSON.stringify(err)))
     ));
 
+  // 当更新工程的时候，也需要更新对应users
   @Effect()
   updateUserProjectRef$: Observable<Action> = this.actions$
     .ofType(actions.ActionTypes.UPDATE) // 筛选 user里面的UPDATE
@@ -47,6 +50,7 @@ export class UserEffects {
       .catch(err => Observable.of(new actions.DeleteFailAction(JSON.stringify(err))))
     );
 
+  // 搜索user
   @Effect()
   search$: Observable<Action> = this.actions$ 
     .ofType(actions.ActionTypes.SEARCH) 

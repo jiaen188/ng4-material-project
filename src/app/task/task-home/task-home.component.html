@@ -15,8 +15,8 @@
   style="box-shadow: 1px 1px 3px #000; margin-right: 15px">
     <app-task-header 
       [header]="list.name" 
-      (newTask)="launchNewTaskDialog()"
-      (moveAll)="launchCopyTaskDialog()"
+      (newTask)="launchNewTaskDialog(list)"
+      (moveAll)="launchCopyTaskDialog(list)"
       (delList)="launchConfirmDialog(list)"
       (onEditList)="launchEditListDialog(list)">
     </app-task-header>

@@ -28,9 +28,9 @@ export class ProjectEffects { // 这个effect是为了处理PROJECT这个参数
   addProject$: Observable<Action> = this.actions$
     .ofType(actions.ActionTypes.ADD) // 筛选 project里面的ADD
     .map(toPayload)
-    .withLatestFrom(this.store$.select(fromRoot.getAuthState)) // 这个操作符是两个流都有了后，前一个流发生了变化才发射
-    .switchMap(([project, auth]) => {
-      const added = { ...project, members: [`${auth.userId}`] }; // 当添加一个project ，用户本身已经在这个project的members列表中了
+    .withLatestFrom(this.store$.select(fromRoot.getAuthState).map(auth => auth.user).debug('auth')) // 这个操作符是两个流都有了后，前一个流发生了变化才发射
+    .switchMap(([project, user]) => {
+      const added = { ...project, members: [`${user.id}`] }; // 当添加一个project ，用户本身已经在这个project的members列表中了
       return this.service$.add(added)
         .map(project => new actions.AddSuccessAction(project))
         .catch(err => Observable.of(new actions.AddFailAction(JSON.stringify(err))));
@@ -81,25 +81,34 @@ export class ProjectEffects { // 这个effect是为了处理PROJECT这个参数
   loadUsers$: Observable<Action> = this.actions$
     .ofType(actions.ActionTypes.LOAD_SUCCESS)
     .map(toPayload)
-    .switchMap((projects: Project[]) => Observable.from(projects.map(prj => prj.id))
+    .switchMap((projects: Project[]) => Observable.from(projects.map(prj => prj.id)) // 每个project都需要触发一下加载user的action
       .map(projectId => new Useractions.LoadAction(projectId))
     );
 
+  // 更新用户user 和项目 project 之间的关系
   @Effect()
   addUserProject$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.LOAD_SUCCESS)
+    .ofType(actions.ActionTypes.ADD_SUCCESS)
     .map(toPayload)
-    .switchMap((projects: Project[]) => Observable.from(projects.map(prj => prj.id))
-      .map(projectId => new Useractions.LoadAction(projectId))
-    );
+    .map(project => project.id) // withLatestFrom 是两个流都有了后，前一个流更新，就发射
+    .withLatestFrom(this.store$.select(fromRoot.getAuthState).map(auth => auth.user), (projectId, user) => { 
+      return new Useractions.AddAction({user: user, projectId: projectId});
+    });
 
   @Effect()
   removeUserProject$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.LOAD_SUCCESS)
+    .ofType(actions.ActionTypes.DELETE_SUCCESS)
     .map(toPayload)
-    .switchMap((projects: Project[]) => Observable.from(projects.map(prj => prj.id))
-      .map(projectId => new Useractions.LoadAction(projectId))
-    );
+    .map(project => project.id) // withLatestFrom 是两个流都有了后，前一个流更新，就发射
+    .withLatestFrom(this.store$.select(fromRoot.getAuthState).map(auth => auth.user), (projectId, user) => { 
+      return new Useractions.DeleteAction({user: user, projectId: projectId});
+    });
+
+  @Effect()
+  updateUserProject$: Observable<Action> = this.actions$
+    .ofType(actions.ActionTypes.INVITE_SUCCESS)
+    .map(toPayload)
+    .map(project => new Useractions.UpdateAction(project));
 
   constructor(
     private actions$: Actions,

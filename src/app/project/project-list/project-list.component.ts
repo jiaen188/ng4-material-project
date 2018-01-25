@@ -97,9 +97,15 @@ export class ProjectListComponent implements OnInit, OnDestroy {
       }); 
   }
 
-  launchInviteDialog() {
-    const dialogRef = this.dialog.open(InviteComponent, { data: { members: [] } });
-    // dialogRef.afterClosed().subscribe(result => console.log(result));
+  launchInviteDialog(project: Project) {
+    /* const dialogRef = this.dialog.open(InviteComponent, { data: { members: [] } });
+    // dialogRef.afterClosed().subscribe(result => console.log(result)); */
+
+    // 初始值是当前的用户，防止添加用户的时候，重复添加
+    this.store$.select(fromRoot.getProjectUsers(project.id))
+    .map(users => this.dialog.open(InviteComponent, { data: { members: users } }))
+    .switchMap(dialogRef => dialogRef.afterClosed().take(1))
+    .subscribe(val => this.store$.dispatch(new actions.InviteAction({projectId: project.id, members: val})));
   }
 
   launchUpdateDialog(project: Project) {

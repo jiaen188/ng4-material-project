@@ -13,7 +13,7 @@ export class TaskEffects { // 这个effect是为了处理PROJECT这个参数
 
   @Effect()
   loadTasks$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.LOAD) // 筛选 taskList里面的LOAD
+    .ofType(actions.ActionTypes.LOAD) // 筛选 task里面的LOAD
     .map(toPayload)
     .switchMap((taskLists) => this.service$.getByLists(taskLists)
       .map(tasks => new actions.LoadSuccessAction(tasks))
@@ -22,7 +22,7 @@ export class TaskEffects { // 这个effect是为了处理PROJECT这个参数
 
   @Effect()
   addTask$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.ADD) // 筛选 taskList里面的ADD
+    .ofType(actions.ActionTypes.ADD) // 筛选 task里面的ADD
     .map(toPayload)
     .debug('add taskList')
     .switchMap(task => this.service$.add(task)
@@ -32,7 +32,7 @@ export class TaskEffects { // 这个effect是为了处理PROJECT这个参数
 
   @Effect()
   updateTask$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.UPDATE) // 筛选 taskList里面的UPDATE
+    .ofType(actions.ActionTypes.UPDATE) // 筛选 task里面的UPDATE
     .map(toPayload)
     .switchMap(task => this.service$.update(task)
       .map(task_ => new actions.UpdateSuccessAction(task_))
@@ -41,7 +41,7 @@ export class TaskEffects { // 这个effect是为了处理PROJECT这个参数
 
   @Effect()
   deleteTask$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.DELETE)
+    .ofType(actions.ActionTypes.DELETE) // 筛选 task里面的DELETE
     .map(toPayload)
     .switchMap(task => this.service$.del(task)
       .map(task_ => new actions.DeleteSuccessAction(task_))
@@ -50,7 +50,7 @@ export class TaskEffects { // 这个effect是为了处理PROJECT这个参数
 
   @Effect()
   completeTask$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.COMPLETE)
+    .ofType(actions.ActionTypes.COMPLETE) // 筛选 task里面的COMPLETE
     .map(toPayload)
     .switchMap(task => this.service$.complete(task)
       .map(task_ => new actions.CompleteSuccessAction(task_))
@@ -58,8 +58,8 @@ export class TaskEffects { // 这个effect是为了处理PROJECT这个参数
     );
 
   @Effect()
-  movep$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.MOVE)
+  move$: Observable<Action> = this.actions$
+    .ofType(actions.ActionTypes.MOVE) // 筛选 task里面的MOVE
     .map(toPayload)
     .switchMap(({ taskId, taskListId }) => this.service$.move(taskId, taskListId)
       .map(task => new actions.MoveSuccessAction(task))
@@ -67,8 +67,8 @@ export class TaskEffects { // 这个effect是为了处理PROJECT这个参数
     );
 
   @Effect()
-  moveAllp$: Observable<Action> = this.actions$
-    .ofType(actions.ActionTypes.MOVE_ALL)
+  moveAll$: Observable<Action> = this.actions$
+    .ofType(actions.ActionTypes.MOVE_ALL) // 筛选 task里面的整个task的移动MOVEALL
     .map(toPayload)
     .switchMap(({ taskListId, targetListId }) => this.service$.moveAll(taskListId, targetListId)
       .map(tasks => new actions.MoveAllSuccessAction(tasks))
