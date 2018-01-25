@@ -31,7 +31,9 @@ export class ChipsListComponent implements OnInit, ControlValueAccessor {
   items: User[];
   memberResult$: Observable<User[]>;
 
-  constructor(private fb: FormBuilder, private service: UserService) { }
+  constructor(private fb: FormBuilder, private service: UserService) {
+    this.items = [];
+   }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -52,8 +54,6 @@ export class ChipsListComponent implements OnInit, ControlValueAccessor {
   private propagateChange = (_: any) => { };  
 
   writeValue(obj: User[]): void {
-    console.log("写入组件的user");
-    console.log(obj);
     if (obj && this.multiple) {
       const userEntities = obj.reduce((e, c) => ({...e, c}), {});
       if (this.items) {

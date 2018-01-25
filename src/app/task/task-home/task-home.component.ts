@@ -104,7 +104,7 @@ export class TaskHomeComponent implements OnInit {
     private route: ActivatedRoute
   ) { 
     this.projectId$ = this.route.paramMap.pluck('id');
-    this.lists$ = this.store$.select(fromRoot.getTaskLists);
+    this.lists$ = this.store$.select(fromRoot.getTaskByList);
   }
 
   ngOnInit() {
@@ -120,12 +120,21 @@ export class TaskHomeComponent implements OnInit {
       .subscribe(val => this.store$.dispatch(new taskActions.AddAction({...val, taskListId: list.id, completed: false, createDate: new Date()})))
   }
 
-  launchCopyTaskDialog() {
+  launchCopyTaskDialog(list) {
     // const dialogRef = this.dialog.open(CopyTaskComponent, {data: {lists: this.lists}});
+
+    this.lists$.map(l => l.filter(n => n.id !== list.id))
+      .map(li => this.dialog.open(CopyTaskComponent, {data: {lists: li}}))
+      .switchMap(dialogRef => dialogRef.afterClosed().take(1).filter(n => n))
+      .subscribe(val => this.store$.dispatch(new taskActions.MoveAllAction({srcListId: list.id, targetListId: val})));
   }
 
   launchUpdateTaskDialog(task) {
     const dialogRef = this.dialog.open(NewTaskComponent, {data: {title: '修改任务：',task: task}});
+    dialogRef.afterClosed()
+      .take(1)
+      .filter(n => n) 
+      .subscribe(val => this.store$.dispatch(new taskActions.UpdateAction({...task, ...val})));
   }
 
   launchConfirmDialog(list: TaskList) {
@@ -171,8 +180,21 @@ export class TaskHomeComponent implements OnInit {
     }
   }
 
-  handleQuickTask(desc: string) {
+  // 快速添加
+  handleQuickTask(desc: string, list) {
     console.log(desc);
+
+    const user$ = this.store$.select(fromRoot.getAuthState).map(auth => auth.user); // 新建task的时候，我们先取出user
+    user$.take(1)
+      .subscribe(user => this.store$.dispatch(new taskActions.AddAction({
+        desc: desc,
+        priority: 3,
+        ownerId: user.id, 
+        taskListId: list.id, 
+        completed: false, 
+        createDate: new Date(),
+        participantIds: []
+      })));
   }
 
 }

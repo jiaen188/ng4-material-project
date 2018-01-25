@@ -37,8 +37,6 @@ export class NewTaskComponent implements OnInit {
   ngOnInit() {
     this.title = this.data.title;
     // console.log(JSON.stringify(this.data.task));
-    console.log("初始化new task");
-    console.log(this.data);
 
     this.form = this.fb.group({
       desc: [this.data.task ? this.data.task.desc : '', Validators.required],
