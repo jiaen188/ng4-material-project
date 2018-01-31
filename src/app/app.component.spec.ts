@@ -7,7 +7,7 @@ import { MdSidenavModule } from '@angular/material';
 import { APP_BASE_HREF } from '@angular/common';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(async(() => { // 在每一个测试用例运行之前，配置测试环境
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
@@ -26,10 +26,10 @@ describe('AppComponent', () => {
     }).compileComponents();
   }));
 
-  it('应该创建应用', async(() => {
+  it('应该创建应用', async(() => { // it 一个测试用例， async 异步的运行
     const fixture = TestBed.createComponent(AppComponent); // 创建组件
     const app = fixture.debugElement.componentInstance; // 获得实例对象
-    expect(app).toBeTruthy();
+    expect(app).toBeTruthy(); // 期望什么样的结果
   }));
 
   it('应该包含一个 .site 的元素', async(() => {

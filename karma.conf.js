@@ -17,7 +17,7 @@ module.exports = function (config) {
     },
     files:[
       { pattern: './src/test.ts', watched: false},
-      { pattern:'./node_modules/@angular/material/prebuilt-themes/indigo-pink.css'}
+      { pattern:'./node_modules/@angular/material/prebuilt-themes/indigo-pink.css'} // 把样式主题加载进去
     ],
     coverageIstanbulReporter: {
       reports: [ 'html', 'lcovonly' ],
