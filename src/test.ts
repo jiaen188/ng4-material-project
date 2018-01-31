@@ -11,6 +11,7 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
+import 'rxjs/Rx'; // 为了ng test不报无法识别rxjs的操作符，但是不能再生产环境做，只能在开发环境，因为rxjs的包很大的
 
 // Unfortunately there's no typing for the `__karma__` variable. Just declare it as any.
 declare const __karma__: any;
