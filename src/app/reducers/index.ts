@@ -44,10 +44,11 @@ const reducers = { //定义一个全局的reducers 导入所有的各自xx.reduc
 };
 
 const productionReducers: ActionReducer<State> = combineReducers(reducers); // 将reducer合并, 为生产环境准备的reducers
+// const developmentReducers: ActionReducer<State> = combineReducers(storeFreeze(reducers)); // 下面的是优化写法
 const developmentReducers: ActionReducer<State> = compose(storeFreeze, combineReducers)(reducers); // 为开发环境准备
 // 同这种写法combineReducers(storeFreeze(reducers));
 // 当我们在 开发环境的时候，如果我们不小心改变了原有的 state，为了冻结store，方便我们观察
-// compose 能将第一个函数作为第二个函数的参数传入
+// compose 能将前面的函数，作为后面函数的参数，层层传递
 
 export function reducer(state = initialState, action: any): State {
   return environment.production ? productionReducers(state, action) : developmentReducers(state, action);
